@@ -2,14 +2,24 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        libpq-dev \
+        gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . .
 
-EXPOSE 5000
+EXPOSE 5001
 
-ENV FLASK_APP=main.py
-ENV FLASK_RUN_HOST=0.0.0.0
+RUN useradd -m -u 1000 appuser && \
+    chown -R appuser:appuser /app
+USER appuser
 
-CMD ["flask", "run"]
+CMD ["python", "main.py"]
