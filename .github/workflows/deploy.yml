@@ -58,12 +58,12 @@ jobs:
           key: ${{ secrets.KEY_TEST }}
           port: 22
           script: |
-            docker stop user-app || true
-            docker rm --force user-app || true
-            docker run -d -p 5001:5001 \
+            sudo docker stop user-app || true
+            sudo docker rm --force user-app || true
+            sudo docker run -d -p 5001:5001 \
               --network=rede \
               --name user-app \
               -e POSTGRES_URL=${{ secrets.POSTGRES_URL }} \
               -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
               -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
-              canavero/projeto-software-2026-1-user:${{ github.sha }}
+              enzocanavero/projeto-software-2026-1-user:${{ github.sha }}
